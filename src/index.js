@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes'
 
 import { PORT } from './config/serverConfig.js'
 
-
 const app = express()
 
 app.get('/ping', (req, res) => {
