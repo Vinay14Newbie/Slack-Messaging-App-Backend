@@ -1,7 +1,6 @@
-import pluginJs from '@eslint/js'
-import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import globals from 'globals'
-
+import pluginJs from '@eslint/js';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import globals from 'globals';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
@@ -17,4 +16,4 @@ export default [
     }
   },
   pluginJs.configs.recommended
-]
+];
