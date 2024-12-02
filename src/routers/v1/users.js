@@ -1,12 +1,10 @@
-import express from 'express'
+import express from 'express';
+import { zodSignupSchema } from '../../validators/zodSignupSchema.js';
+import { validate } from '../../validators/zodValidator.js';
+import { signup } from '../../controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    return res.status(200).json({
-        success: true,
-        message: "user founded succesfully"
-    })
-})
+router.post('/signup', validate(zodSignupSchema), signup);
 
 export default router;
