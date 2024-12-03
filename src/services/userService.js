@@ -1,16 +1,29 @@
 import userRepository from '../repositories/userRepository.js';
+import validationError from '../utils/errors/validationError.js';
 
 export const signupService = async (data) => {
   try {
     const newUser = await userRepository.create(data);
     return newUser;
   } catch (error) {
-    if (error.code === 11000 && error.name === 'MongoServerError') {
-      throw {
-        status: 400, //bad request
-        message: 'user with the same username or email address already exists'
-      };
+    console.log('User service error: ', error);
+
+    if (error.name == 'validationError') {
+      throw new validationError(
+        {
+          error: error.errors
+        },
+        error.message
+      );
     }
-    throw error;
+
+    if (error.name == 'MongoServerError' && error.code == 11000) {
+      throw new validationError(
+        {
+          error: ['A user with same email or username already exists']
+        },
+        'A user with same email or username already exists'
+      );
+    }
   }
 };

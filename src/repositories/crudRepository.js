@@ -5,8 +5,8 @@ export default function crudRepository(model) {
       return newDoc;
     },
     getAll: async function () {
-      const doc = await model.find();
-      return doc;
+      const allDocs = await model.find();
+      return allDocs;
     },
     getById: async function (id) {
       const doc = await model.findById(id);
@@ -17,7 +17,7 @@ export default function crudRepository(model) {
       return response;
     },
     update: async function (id, data) {
-      const updatedDoc = await model.findByIdAndUpdate(id, user, {
+      const updatedDoc = await model.findByIdAndUpdate(id, data, {
         new: true
       });
       return updatedDoc;
