@@ -1,5 +1,9 @@
+import { StatusCodes } from 'http-status-codes';
 import userRepository from '../repositories/userRepository.js';
+import ClientError from '../utils/errors/clientError.js';
 import validationError from '../utils/errors/validationError.js';
+import bcrypt from 'bcrypt';
+import { createJwt } from '../utils/common/authUtils.js';
 
 export const signupService = async (data) => {
   try {
@@ -25,5 +29,44 @@ export const signupService = async (data) => {
         'A user with same email or username already exists'
       );
     }
+  }
+};
+
+export const findAllUsersService = async () => {
+  const users = await userRepository.getAll();
+  return users;
+};
+
+export const signinUserService = async (data) => {
+  try {
+    const email = data.email;
+    const user = await userRepository.getByEmail(email);
+    if (!user) {
+      throw new ClientError({
+        explanation: 'Invalid data sent by user',
+        message: 'No registered user found with this email',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isPasswordValid = bcrypt.compareSync(data.password, user.password);
+
+    if (!isPasswordValid) {
+      throw new ClientError({
+        explanation: 'Invalid data sent by user',
+        message: 'Password is invalid, Please try later',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    return {
+      username: user.username,
+      avatar: user.avatar,
+      email: user.email,
+      token: createJwt({ id: user._id, email: user.email })
+    };
+  } catch (error) {
+    console.log('Found error in service layer: ', error);
+    throw error;
   }
 };

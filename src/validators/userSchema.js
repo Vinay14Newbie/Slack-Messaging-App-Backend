@@ -9,3 +9,10 @@ export const zodSignupSchema = z.object({
     .string({ password: 'Password should have at-least 5 characters' })
     .min(5)
 });
+
+export const zodSigninSchema = z.object({
+  email: z.string({ message: 'Give proper email address' }).email(),
+  password: z
+    .string({ password: 'Password should have at-least 5 characters' })
+    .min(5)
+});
