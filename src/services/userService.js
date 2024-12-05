@@ -1,9 +1,10 @@
+import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
+
 import userRepository from '../repositories/userRepository.js';
+import { createJwt } from '../utils/common/authUtils.js';
 import ClientError from '../utils/errors/clientError.js';
 import validationError from '../utils/errors/validationError.js';
-import bcrypt from 'bcrypt';
-import { createJwt } from '../utils/common/authUtils.js';
 
 export const signupService = async (data) => {
   try {
@@ -11,6 +12,7 @@ export const signupService = async (data) => {
     return newUser;
   } catch (error) {
     console.log('User service error: ', error);
+    console.log('user service error.name: ', error.name);
 
     if (error.name == 'validationError') {
       throw new validationError(
@@ -55,7 +57,7 @@ export const signinUserService = async (data) => {
       throw new ClientError({
         explanation: 'Invalid data sent by user',
         message: 'Password is invalid, Please try later',
-        statusCode: StatusCodes.NOT_FOUND
+        statusCode: StatusCodes.BAD_REQUEST
       });
     }
 

@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+
 import { customErrorResponse } from '../utils/common/responseObject.js';
 
 export const validate = (schema) => {
