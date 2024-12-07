@@ -37,7 +37,9 @@ const workspaceRepository = {
   },
 
   addMemberToWorkspace: async (workspaceId, memberId, role) => {
-    const workspace = await Workspace.findOne({ workspaceId });
+    const workspace = await Workspace.findById(workspaceId);
+    console.log('Workspace in repo layer: ', workspace);
+
     if (!workspace) {
       throw new ClientError({
         explanation: 'invalid data sent by the user',
@@ -45,6 +47,8 @@ const workspaceRepository = {
         statusCode: StatusCodes.NOT_FOUND
       });
     }
+
+    console.log('Member id in repo layer: ', memberId);
 
     const isValidUser = await User.findById(memberId);
     if (!isValidUser) {
@@ -75,9 +79,8 @@ const workspaceRepository = {
   },
 
   addChannelToWorkspace: async (workspaceId, channelName) => {
-    const workspace = await Workspace.findOne({ workspaceId }).populate(
-      'channels'
-    );
+    const workspace =
+      await Workspace.findById(workspaceId).populate('channels');
     if (!workspace) {
       throw new ClientError({
         explanation: 'invalid data sent by the user',
@@ -115,3 +118,5 @@ const workspaceRepository = {
     return workspaces;
   }
 };
+
+export default workspaceRepository;

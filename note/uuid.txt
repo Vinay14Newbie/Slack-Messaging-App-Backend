@@ -1,0 +1,15 @@
+When working with a database, it’s common practice to use some kind of id field to provide a unique identifier for each row in a table.
+
+Imagine, for example, a customers table. We wouldn’t want to use fields such as name or address as unique identifiers because it’s possible more than one customer could have the same name, or share the same address, or in some cases even both!
+
+Instead, it’s a good idea to assign each row some kind of truly unique identifier. One option we have is to use a UUID.
+
+What is a UUID?Copy Icon
+What does UUID stand for? A UUID – that’s short for Universally Unique Identifier – is a 36-character alphanumeric string that can be used to identify information. They are often used, for example, to identify rows of data within a database table, with each row assigned a specific UUID.
+
+Here is one example of a UUID: acde070d-8c4c-4f0d-9d8a-162843c10333
+
+UUIDs are widely used in part because they are highly likely to be unique globally, meaning that not only is our row’s UUID unique in our database table, it’s probably the only row with that UUID in any system anywhere.
+
+(Technically, it’s not impossible that the same UUID we generate could be used somewhere else, but with 340,282,366,920,938,463,463,374,607,431,768,211,456 different possible UUIDs out there, the chances are very slim).
+

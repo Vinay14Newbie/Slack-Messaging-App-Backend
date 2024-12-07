@@ -30,7 +30,7 @@ export const isAuthenticated = async function (req, res, next) {
     console.log('user return via token: ', response);
 
     const user = await userRepository.getById(response.id);
-    req.user = user;
+    req.user = user.id;
     next();
   } catch (error) {
     console.log('AuthMiddleware error: ', error);
