@@ -2,8 +2,8 @@ import express from 'express';
 
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
-import apiRouter from './routers/apiRouter.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
+import apiRouter from './routers/apiRouter.js';
 
 const app = express();
 

@@ -1,9 +1,8 @@
-import { StatusCodes } from 'http-status-codes';
 import { v4 as uuidv4 } from 'uuid';
 
 import workspaceRepository from '../repositories/workspaceRepository.js';
-import validationError from '../utils/errors/validationError.js';
 import { customErrorResponse } from '../utils/common/responseObject.js';
+import validationError from '../utils/errors/validationError.js';
 
 export const createWorkspaceService = async (worksapceData) => {
   try {

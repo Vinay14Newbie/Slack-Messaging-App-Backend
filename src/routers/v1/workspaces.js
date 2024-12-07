@@ -1,12 +1,13 @@
 import express from 'express';
-import { validate } from '../../validators/zodValidator.js';
-import { zodCreateWorkspaceScema } from '../../validators/workspaceSchema.js';
+
 import {
   createWorkspaceController,
   deleteWorkspaceById,
   findAllWorkspaces
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
+import { zodCreateWorkspaceScema } from '../../validators/workspaceSchema.js';
+import { validate } from '../../validators/zodValidator.js';
 
 const router = express.Router();
 

@@ -1,9 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
-import Workspace from '../schema/workspace.js';
-import crudRepository from './crudRepository.js';
-import ClientError from '../utils/errors/clientError.js';
+
 import User from '../schema/user.js';
+import Workspace from '../schema/workspace.js';
+import ClientError from '../utils/errors/clientError.js';
 import channelRepository from './channelRepository.js';
+import crudRepository from './crudRepository.js';
 
 const workspaceRepository = {
   ...crudRepository(Workspace),
