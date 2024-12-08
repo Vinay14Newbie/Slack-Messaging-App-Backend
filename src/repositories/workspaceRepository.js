@@ -39,43 +39,8 @@ const workspaceRepository = {
 
   addMemberToWorkspace: async (workspaceId, memberId, role) => {
     const workspace = await Workspace.findById(workspaceId);
-    console.log('Workspace in repo layer: ', workspace);
 
-    // 1- check if workspace exists
-    if (!workspace) {
-      throw new ClientError({
-        explanation: 'invalid data sent by the user',
-        message: 'workspace not found',
-        statusCode: StatusCodes.NOT_FOUND
-      });
-    }
-
-    console.log('Member id in repo layer: ', memberId);
-
-    // 2- check if member exist
-    const isValidUser = await User.findById(memberId);
-    if (!isValidUser) {
-      throw new ClientError({
-        explanation: 'invalid data sent by the user',
-        message: 'User not found',
-        statusCode: StatusCodes.NOT_FOUND
-      });
-    }
-
-    // 3- is member already a part of this workspace
-    const isMemberAlreadyPartOfWorkspace = workspace.members.find(
-      (member) => member.memberId == memberId
-    );
-
-    if (isMemberAlreadyPartOfWorkspace) {
-      throw new ClientError({
-        explanation: 'invalid data sent by the user',
-        message: 'User is already part of the workspace',
-        statusCode: StatusCodes.FORBIDDEN // this operation is not allowed
-      });
-    }
-
-    // 4- finally add member to the workspace
+    // finally add member to the workspace
     workspace.members.push({ memberId, role });
 
     await workspace.save();
@@ -84,27 +49,7 @@ const workspaceRepository = {
   },
 
   addChannelToWorkspace: async (workspaceId, channelName) => {
-    const workspace =
-      await Workspace.findById(workspaceId).populate('channels');
-    if (!workspace) {
-      throw new ClientError({
-        explanation: 'invalid data sent by the user',
-        message: 'workspace not found',
-        statusCode: StatusCodes.NOT_FOUND
-      });
-    }
-
-    const isChannelAlreadyPartOfWorkspace = workspace.channels.find(
-      (channel) => channel.name === channelName
-    );
-
-    if (isChannelAlreadyPartOfWorkspace) {
-      throw new ClientError({
-        explanation: 'invalid data sent by the user',
-        message: 'Channel is already part of the workspace',
-        statusCode: StatusCodes.FORBIDDEN // this operation is not allowed
-      });
-    }
+    const workspace = await Workspace.findById(workspaceId);
 
     const channel = await channelRepository.create({ name: channelName });
 
@@ -121,6 +66,12 @@ const workspaceRepository = {
     }).populate('members.memberId', 'username email avatar');
 
     return workspaces;
+  },
+
+  workspaceDetails: async (workspaceId) => {
+    const workspaceData = await Workspace.findById(workspaceId)
+      .populate('members.memberId', 'username email avatar')
+      .populate('channels');
   }
 };
 
