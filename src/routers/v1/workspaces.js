@@ -2,8 +2,9 @@ import express from 'express';
 
 import {
   createWorkspaceController,
-  deleteWorkspaceById,
-  findAllWorkspaces
+  deleteWorkspaceByIdController,
+  fetchAllWorkspaceUserIsPartOfController,
+  findAllWorkspacesController
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 import { zodCreateWorkspaceScema } from '../../validators/workspaceSchema.js';
@@ -18,8 +19,10 @@ router.post(
   createWorkspaceController
 );
 
-router.get('/', findAllWorkspaces);
+router.get('/findAll', findAllWorkspacesController);
 
-router.delete('/', deleteWorkspaceById);
+router.delete('/:workspaceId', isAuthenticated, deleteWorkspaceByIdController);
+
+router.get('/', isAuthenticated, fetchAllWorkspaceUserIsPartOfController);
 
 export default router;

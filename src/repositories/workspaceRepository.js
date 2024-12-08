@@ -41,6 +41,7 @@ const workspaceRepository = {
     const workspace = await Workspace.findById(workspaceId);
     console.log('Workspace in repo layer: ', workspace);
 
+    // 1- check if workspace exists
     if (!workspace) {
       throw new ClientError({
         explanation: 'invalid data sent by the user',
@@ -51,6 +52,7 @@ const workspaceRepository = {
 
     console.log('Member id in repo layer: ', memberId);
 
+    // 2- check if member exist
     const isValidUser = await User.findById(memberId);
     if (!isValidUser) {
       throw new ClientError({
@@ -60,6 +62,7 @@ const workspaceRepository = {
       });
     }
 
+    // 3- is member already a part of this workspace
     const isMemberAlreadyPartOfWorkspace = workspace.members.find(
       (member) => member.memberId == memberId
     );
@@ -72,6 +75,7 @@ const workspaceRepository = {
       });
     }
 
+    // 4- finally add member to the workspace
     workspace.members.push({ memberId, role });
 
     await workspace.save();

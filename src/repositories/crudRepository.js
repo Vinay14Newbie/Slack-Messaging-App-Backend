@@ -21,6 +21,15 @@ export default function crudRepository(model) {
         new: true
       });
       return updatedDoc;
+    },
+    deleteMany: async (modelIds) => {
+      const response = await model.deleteMany({
+        //_id should be in modelIds array  (This means the function will delete all documents whose _id matches any value in modelIds.)
+        _id: {
+          $in: modelIds
+        }
+      });
+      return response;
     }
   };
 }
