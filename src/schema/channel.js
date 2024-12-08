@@ -5,6 +5,11 @@ const channelSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, 'Name is required']
+    },
+    workspaceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Workspace',
+      required: [true, 'Workspace id is required']
     }
   },
   { timestamps: true }

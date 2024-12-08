@@ -1,11 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 
 import {
+  addChannelToWorkspaceService,
+  addMemberToWorkspaceService,
   createWorkspaceService,
   deleteWorkspaceByIdService,
   fetchAllWorkspacesUserIsPartOfService,
   getAllWorkspacesService,
-  getWorkspaceService
+  getWorkspaceByJoinCodeService,
+  getWorkspaceService,
+  updateWorkspaceService
 } from '../services/workspaceService.js';
 import {
   customErrorResponse,
@@ -111,6 +115,90 @@ export async function getWorkspaceByIdController(req, res) {
     return res
       .status(StatusCodes.OK)
       .json(successResponse(workspace, 'fetched workspace succesfully'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function getWorkspaceByJoinCodeController(req, res) {
+  try {
+    const workspace = await getWorkspaceByJoinCodeService(
+      req.params.joinCode,
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(workspace, 'fetched workspace succesfully'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function updateWorkspaceController(req, res) {
+  try {
+    const response = await updateWorkspaceService(
+      req.params.workspaceId,
+      req.body,
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Workspace updated succesfully'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function addMemberToWorkspaceController(req, res) {
+  try {
+    const response = await addMemberToWorkspaceService(
+      req.params.workspaceId,
+      req.body.memberId,
+      req.body.role || 'member',
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Member added successfully :)'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function addChannelToWorkspaceController(req, res) {
+  try {
+    const response = await addChannelToWorkspaceService(
+      req.params.workspaceId,
+      req.body.channelName,
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Channel created successfully :)'));
   } catch (error) {
     console.log('Controller layer error: ', error);
     if (error.statusCode) {

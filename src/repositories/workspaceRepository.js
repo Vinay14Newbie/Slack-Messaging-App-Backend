@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
 
-import User from '../schema/user.js';
 import Workspace from '../schema/workspace.js';
 import ClientError from '../utils/errors/clientError.js';
 import channelRepository from './channelRepository.js';
@@ -51,7 +50,19 @@ const workspaceRepository = {
   addChannelToWorkspace: async (workspaceId, channelName) => {
     const workspace = await Workspace.findById(workspaceId);
 
-    const channel = await channelRepository.create({ name: channelName });
+    console.log(
+      'Workspace in repo layer: ',
+      workspace,
+      ' & channelName in repo layer: ',
+      channelName
+    );
+
+    const channel = await channelRepository.create({
+      name: channelName,
+      workspaceId: workspaceId
+    });
+
+    console.log('Channel in repo layer: ', channel);
 
     workspace.channels.push(channel);
     await workspace.save();
@@ -63,7 +74,9 @@ const workspaceRepository = {
   fetchAllWorkspaceByMemberId: async (memberId) => {
     const workspaces = await Workspace.find({
       'members.memberId': memberId //if we found the same ID it will stored in the workspaces
-    }).populate('members.memberId', 'username email avatar');
+    })
+      .populate('members.memberId', 'username email avatar')
+      .populate('channels');
 
     return workspaces;
   },
@@ -72,6 +85,7 @@ const workspaceRepository = {
     const workspaceData = await Workspace.findById(workspaceId)
       .populate('members.memberId', 'username email avatar')
       .populate('channels');
+    return workspaceData;
   }
 };
 
