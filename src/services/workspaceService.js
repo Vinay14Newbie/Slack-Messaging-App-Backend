@@ -63,17 +63,6 @@ export const getAllWorkspacesService = async () => {
   return workspaces;
 };
 
-export const getWorkspaceByIdService = async (workspaceId) => {
-  const workspace = await workspaceRepository.getById(workspaceId);
-  if (!workspace) {
-    throw customErrorResponse({
-      explanation: 'Invalid id received',
-      message: 'workspace with this id does not exist'
-    });
-  }
-  return workspace;
-};
-
 export const getWorkspaceByNameService = async (workspaceName) => {
   try {
     const workspace =
@@ -102,16 +91,13 @@ export const deleteWorkspaceByIdService = async (workspaceId, userId) => {
 
     // 2- if the user is admin then delete the workspace
     console.log('workspace members: ', workspace.members, ' userid ', userId);
-    const isAllowed = workspace.members.find(
-      (member) =>
-        member.memberId.toString() === userId && member.role === 'admin'
-    );
+    const isAllowed = isUserAdminOfWorkspace(workspace, userId);
 
     if (isAllowed) {
-      // All channel document who have the same _id as in the workspace.channels array have will get deleted
+      // All channel document who have the same _id as in the workspace.channels array have, will get deleted
       await channelRepository.deleteMany(workspace.channels);
 
-      const response = await workspaceRepository.delete(workspaceId);
+      const response = workspaceRepository.delete(workspaceId);
       return response;
     }
 
@@ -139,3 +125,67 @@ export const fetchAllWorkspacesUserIsPartOfService = async (memberId) => {
     throw error;
   }
 };
+
+const isUserPartOfWorkspace = (workspace, userId) => {
+  const response = workspace.members.find(
+    (member) => member.memberId.toString() === userId
+  );
+  return response;
+};
+
+const isUserAdminOfWorkspace = (workspace, userId) => {
+  const response = workspace.members.find(
+    (member) => member.memberId.toString() === userId && member.role === 'admin'
+  );
+  return response;
+};
+
+export const getWorkspaceService = async (workspaceId, userId) => {
+  try {
+    // 1- check if workspace exist
+    const workspace = await workspaceRepository.getById(workspaceId);
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data sent by user',
+        message: "workspace doesn't exist",
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 2- check if user part of this workspace
+    const isMember = isUserPartOfWorkspace(workspace, userId);
+    console.log('isMember: ', isMember);
+
+    if (!isMember) {
+      throw new ClientError({
+        explanation: 'Invalid data sent by user',
+        message: 'user not present in given workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    return workspace;
+  } catch (error) {
+    console.log('Service layer error: ', error);
+    throw error;
+  }
+};
+
+export const getWorkspaceByJoinCodeService = async (joinCode) => {};
+
+export const updateWorkspaceService = async (
+  workspaceId,
+  workspaceData,
+  userId
+) => {};
+
+export const addMemberToWorkspaceService = async (
+  workspaceId,
+  memberId,
+  role
+) => {};
+
+export const addChannelToWorkspaceService = async (
+  workspaceId,
+  channelName
+) => {};

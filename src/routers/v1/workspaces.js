@@ -4,7 +4,8 @@ import {
   createWorkspaceController,
   deleteWorkspaceByIdController,
   fetchAllWorkspaceUserIsPartOfController,
-  findAllWorkspacesController
+  findAllWorkspacesController,
+  getWorkspaceByIdController
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 import { zodCreateWorkspaceScema } from '../../validators/workspaceSchema.js';
@@ -24,5 +25,7 @@ router.get('/findAll', findAllWorkspacesController);
 router.delete('/:workspaceId', isAuthenticated, deleteWorkspaceByIdController);
 
 router.get('/', isAuthenticated, fetchAllWorkspaceUserIsPartOfController);
+
+router.get('/:workspaceId', isAuthenticated, getWorkspaceByIdController);
 
 export default router;

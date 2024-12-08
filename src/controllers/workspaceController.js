@@ -4,7 +4,8 @@ import {
   createWorkspaceService,
   deleteWorkspaceByIdService,
   fetchAllWorkspacesUserIsPartOfService,
-  getAllWorkspacesService
+  getAllWorkspacesService,
+  getWorkspaceService
 } from '../services/workspaceService.js';
 import {
   customErrorResponse,
@@ -62,14 +63,12 @@ export async function deleteWorkspaceByIdController(req, res) {
         })
       );
     }
-    return res
-      .status(StatusCodes.OK)
-      .json(
-        successResponse({
-          message: 'workspace deleted successfully',
-          data: response
-        })
-      );
+    return res.status(StatusCodes.OK).json(
+      successResponse({
+        message: 'workspace deleted successfully',
+        data: response
+      })
+    );
   } catch (error) {
     console.log(error);
     if (error.statusCode) {
@@ -94,6 +93,26 @@ export async function fetchAllWorkspaceUserIsPartOfController(req, res) {
       );
   } catch (error) {
     console.log('workspace controller error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function getWorkspaceByIdController(req, res) {
+  try {
+    const workspace = await getWorkspaceService(
+      req.params.workspaceId,
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(workspace, 'fetched workspace succesfully'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
     if (error.statusCode) {
       return res.status(error.statusCode).json(customErrorResponse(error));
     }
