@@ -2,6 +2,7 @@ import express from 'express';
 
 import {
   addChannelToWorkspaceController,
+  addMemberToWorksapceByEmailController,
   addMemberToWorkspaceController,
   createWorkspaceController,
   deleteWorkspaceByIdController,
@@ -14,6 +15,7 @@ import {
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 import {
   zodAddChannelToWorkspaceSchema,
+  zodAddMemberToByEmailWorkspaceSchema,
   zodAddMemberToWorkspaceSchema,
   zodCreateWorkspaceScema
 } from '../../validators/workspaceSchema.js';
@@ -56,6 +58,13 @@ router.put(
   isAuthenticated,
   validate(zodAddChannelToWorkspaceSchema),
   addChannelToWorkspaceController
+);
+
+router.put(
+  '/:workspaceId/members/email',
+  isAuthenticated,
+  validate(zodAddMemberToByEmailWorkspaceSchema),
+  addMemberToWorksapceByEmailController
 );
 
 export default router;

@@ -6,6 +6,7 @@ import userRepository from '../repositories/userRepository.js';
 import workspaceRepository from '../repositories/workspaceRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 import validationError from '../utils/errors/validationError.js';
+import { isValid } from 'zod';
 
 export const createWorkspaceService = async (worksapceData) => {
   try {
@@ -336,6 +337,72 @@ export const addMemberToWorkspaceService = async (
     return response;
   } catch (error) {
     console.log('Error found while adding member to a workspace: ', error);
+    throw error;
+  }
+};
+
+export const addMemberToWorksapceByEmailService = async (
+  workspaceId,
+  memberEmail,
+  role,
+  userId
+) => {
+  try {
+    // 1- check workspace
+    const workspace = await workspaceRepository.getById(workspaceId);
+
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data',
+        message: 'Invalid workspaced ID sent by user',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 2- check if user exist
+    const isValidUser = await userRepository.getByEmail(memberEmail);
+    if (!isValidUser) {
+      throw new ClientError({
+        explanation: 'invalid data sent by the user',
+        message: 'User not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const memberId = isValidUser._id;
+
+    // 3- check if user is admin or not
+    const isAdmin = isUserAdminOfWorkspace(workspace, userId);
+    if (!isAdmin) {
+      throw new ClientError({
+        explanation: 'invalid data',
+        message: 'User is not a admin, he do not have authority to add members',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    // 4- check if member is already part of workspace or not
+    // first convert the memberId to string
+    const isMember = isUserMemberOfWorkspace(workspace, memberId.toString());
+    if (isMember) {
+      throw new ClientError({
+        explanation: 'invalid data',
+        message: 'user is already part of workspace',
+        statusCode: StatusCodes.FORBIDDEN
+      });
+    }
+    const response = await workspaceRepository.addMemberToWorkspace(
+      workspaceId,
+      memberId,
+      role
+    );
+
+    return response;
+  } catch (error) {
+    console.log(
+      'Error found while adding member by id, in a workspace: ',
+      error
+    );
     throw error;
   }
 };

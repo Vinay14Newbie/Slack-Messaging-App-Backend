@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import {
   addChannelToWorkspaceService,
+  addMemberToWorksapceByEmailService,
   addMemberToWorkspaceService,
   createWorkspaceService,
   deleteWorkspaceByIdService,
@@ -199,6 +200,28 @@ export async function addChannelToWorkspaceController(req, res) {
     return res
       .status(StatusCodes.OK)
       .json(successResponse(response, 'Channel created successfully :)'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function addMemberToWorksapceByEmailController(req, res) {
+  try {
+    const response = await addMemberToWorksapceByEmailService(
+      req.params.workspaceId,
+      req.body.memberEmail,
+      req.body.role || 'member',
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Member added successfully :)'));
   } catch (error) {
     console.log('Controller layer error: ', error);
     if (error.statusCode) {
