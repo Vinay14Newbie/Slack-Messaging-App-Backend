@@ -1,0 +1,20 @@
+
+What is the Simple Mail Transfer Protocol (SMTP)?
+The Simple Mail Transfer Protocol (SMTP) is a technical standard for transmitting electronic mail (email) over a network. Like other networking protocols, SMTP allows computers and servers to exchange data regardless of their underlying hardware or software. Just as the use of a standardized form of addressing an envelope allows the postal service to operate, SMTP standardizes the way email travels from sender to recipient, making widespread email delivery possible.
+
+SMTP is a mail delivery protocol, not a mail retrieval protocol. A postal service delivers mail to a mailbox, but the recipient still has to retrieve the mail from the mailbox. Similarly, SMTP delivers an email to an email provider's mail server, but separate protocols are used to retrieve that email from the mail server so the recipient can read it.
+
+
+
+How does SMTP work?
+All networking protocols follow a predefined process for exchanging data. SMTP defines a process for exchanging data between an email client and a mail server. An email client is what a user interacts with: the computer or web application where they access and send emails. A mail server is a specialized computer for sending, receiving, and forwarding emails; users do not interact directly with mail servers.
+
+Here is a summary of what passes between the email client and the mail server for an email to begin sending:
+
+SMTP connection opened: Since SMTP uses the Transmission Control Protocol (TCP) as its transport protocol, this first step begins with a TCP connection between client and server. Next, the email client begins the email sending process with a specialized "Hello" command (HELO or EHLO, described below).
+Email data transferred: The client sends the server a series of commands accompanied with the actual content of the email: the email header (including its destination and subject line), the email body, and any additional components.
+Mail Transfer Agent (MTA): The server runs a program called a Mail Transfer Agent (MTA). The MTA checks the domain of the recipient's email address, and if it differs from the sender's, it queries the Domain Name System (DNS) to find the recipient's IP address. This is like a post office looking up a mail recipient's zip code.
+Connection closed: The client alerts the server when transmission of data is complete, and the server closes the connection. At this point the server will not receive additional email data from the client unless the client opens a new SMTP connection.
+Usually, this first email server is not the actual email's final destination. The server, having received the email from the client, repeats this SMTP connection process with another mail server. That second server does the same, until finally the email reaches the recipient's inbox on a mail server controlled by the recipient's email provider.
+
+Compare this process to the way a piece of mail travels from sender to recipient. A mail carrier does not take a letter directly from the sender to its recipient. Instead, the mail carrier brings the letter back to their post office. The post office ships the letter to another post office in another town, then another, and so on until the letter reaches the recipient. Similarly, emails go from server to server via SMTP until they arrive at the recipient's inbox.
