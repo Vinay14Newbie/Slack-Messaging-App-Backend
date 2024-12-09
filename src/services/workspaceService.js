@@ -6,7 +6,6 @@ import userRepository from '../repositories/userRepository.js';
 import workspaceRepository from '../repositories/workspaceRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 import validationError from '../utils/errors/validationError.js';
-import { isValid } from 'zod';
 
 export const createWorkspaceService = async (worksapceData) => {
   try {
