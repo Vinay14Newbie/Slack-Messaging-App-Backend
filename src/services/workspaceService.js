@@ -129,7 +129,9 @@ export const fetchAllWorkspacesUserIsPartOfService = async (memberId) => {
 
 const isUserPartOfWorkspace = (workspace, userId) => {
   const response = workspace.members.find(
-    (member) => member.memberId.toString() === userId
+    (member) =>
+      member.memberId.toString() === userId ||
+      member.memberId._id.toString() === userId
   );
   return response;
 };
@@ -169,7 +171,7 @@ const isChannelAlreadyPartOfWorkspace = (workspace, channelName) => {
 export const getWorkspaceService = async (workspaceId, userId) => {
   try {
     // 1- check if workspace exist
-    const workspace = await workspaceRepository.getById(workspaceId);
+    const workspace = await workspaceRepository.getWorkspaceById(workspaceId);
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data sent by user',
@@ -283,6 +285,11 @@ export const addMemberToWorkspaceService = async (
   try {
     // 1- check workspace
     const workspace = await workspaceRepository.getById(workspaceId);
+    console.log(
+      'Workspace id in addMemberToWorksapceService: ',
+      workspace.members[0].memberId
+    );
+
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data',
@@ -340,7 +347,14 @@ export const addChannelToWorkspaceService = async (
 ) => {
   try {
     // 1- check if workspace exist
+    // here we're populating the details so workspace.members.memberId will have the full details
+    // for getting id we need to do workspace.members.memberId._id
     const workspace = await workspaceRepository.workspaceDetails(workspaceId);
+    console.log(
+      'Workspace id in addChannelToWorksapceService: ',
+      workspace.members[0].memberId._id
+    );
+
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data',
