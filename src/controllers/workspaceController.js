@@ -10,6 +10,7 @@ import {
   getAllWorkspacesService,
   getWorkspaceByJoinCodeService,
   getWorkspaceService,
+  removeMemberFromWorkspaceByEmailService,
   updateWorkspaceService
 } from '../services/workspaceService.js';
 import {
@@ -222,6 +223,27 @@ export async function addMemberToWorksapceByEmailController(req, res) {
     return res
       .status(StatusCodes.OK)
       .json(successResponse(response, 'Member added successfully :)'));
+  } catch (error) {
+    console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function removeMemberFromWorkspaceByEmailController(req, res) {
+  try {
+    const response = await removeMemberFromWorkspaceByEmailService(
+      req.params.workspaceId,
+      req.body.memberEmail,
+      req.user
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Member removed successfully :)'));
   } catch (error) {
     console.log('Controller layer error: ', error);
     if (error.statusCode) {

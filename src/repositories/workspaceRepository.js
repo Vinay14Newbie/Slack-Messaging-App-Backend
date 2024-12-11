@@ -54,6 +54,20 @@ const workspaceRepository = {
     return workspace;
   },
 
+  remvoveMemberFromWorkspace: async (workspaceId, memberId) => {
+    const response = await Workspace.findByIdAndUpdate(
+      workspaceId,
+      {
+        $pull: {
+          members: { memberId: memberId }
+        }
+      },
+      { new: true }
+    ).populate('members.memberId', 'username email avatar');
+
+    return response;
+  },
+
   addChannelToWorkspace: async (workspaceId, channelName) => {
     const workspace = await Workspace.findById(workspaceId);
 

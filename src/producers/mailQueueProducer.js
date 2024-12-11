@@ -1,6 +1,6 @@
-import mailQueue from '../queues/mailQueue.js';
-
 import '../processors/mailProcessor.js';
+
+import mailQueue from '../queues/mailQueue.js';
 
 export const addEmailtoMailQueue = async (emailData) => {
   try {

@@ -1,4 +1,5 @@
 import Queue from 'bull';
+
 import redisConfig from '../config/redisConfig.js';
 
 //                        queue name

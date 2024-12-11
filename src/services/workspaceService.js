@@ -336,7 +336,7 @@ export const addMemberToWorkspaceService = async (
     );
 
     addEmailtoMailQueue({
-      ...workspaceJoinMail(workspace),
+      ...workspaceJoinMail(workspace.name),
       to: isValidUser.email
     });
 
@@ -403,6 +403,11 @@ export const addMemberToWorksapceByEmailService = async (
       role
     );
 
+    addEmailtoMailQueue({
+      ...workspaceJoinMail(workspace.name),
+      to: isValidUser.email
+    });
+
     return response;
   } catch (error) {
     console.log(
@@ -411,6 +416,63 @@ export const addMemberToWorksapceByEmailService = async (
     );
     throw error;
   }
+};
+
+export const removeMemberFromWorkspaceByEmailService = async (
+  workspaceId,
+  memberEmail,
+  userId
+) => {
+  // 1- check workspace
+  const workspace = await workspaceRepository.getById(workspaceId);
+
+  if (!workspace) {
+    throw new ClientError({
+      explanation: 'Invalid data',
+      message: 'Invalid workspaced ID sent by user',
+      statusCode: StatusCodes.NOT_FOUND
+    });
+  }
+
+  // 2- check if user exist
+  const isValidUser = await userRepository.getByEmail(memberEmail);
+  if (!isValidUser) {
+    throw new ClientError({
+      explanation: 'invalid data sent by the user',
+      message: 'User not found',
+      statusCode: StatusCodes.NOT_FOUND
+    });
+  }
+
+  const memberId = isValidUser._id;
+
+  // 3- check if user is admin or not
+  const isAdmin = isUserAdminOfWorkspace(workspace, userId);
+  if (!isAdmin) {
+    throw new ClientError({
+      explanation: 'Invalid data',
+      message: 'User is not a admin, he do not have authority to add members',
+      statusCode: StatusCodes.UNAUTHORIZED
+    });
+  }
+
+  // 4- check if member is part of workspace or not
+  // first convert the memberId to string
+  const isMember = isUserMemberOfWorkspace(workspace, memberId.toString());
+  if (!isMember) {
+    throw new ClientError({
+      explanation: 'invalid data',
+      message: 'Member you are trying to remove is not a part of workspace',
+      statusCode: StatusCodes.FORBIDDEN
+    });
+  }
+
+  const response = await workspaceRepository.remvoveMemberFromWorkspace(
+    workspaceId,
+    memberId
+  );
+
+  return response;
 };
 
 export const addChannelToWorkspaceService = async (

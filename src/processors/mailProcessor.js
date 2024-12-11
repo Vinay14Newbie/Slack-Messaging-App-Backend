@@ -1,5 +1,5 @@
-import mailQueue from '../queues/mailQueue.js';
 import mailer from '../config/mailConfig.js';
+import mailQueue from '../queues/mailQueue.js';
 
 //job object is same payload that this processor going to read from the queue
 mailQueue.process(async (job) => {

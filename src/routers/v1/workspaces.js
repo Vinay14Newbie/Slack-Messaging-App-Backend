@@ -10,6 +10,7 @@ import {
   findAllWorkspacesController,
   getWorkspaceByIdController,
   getWorkspaceByJoinCodeController,
+  removeMemberFromWorkspaceByEmailController,
   updateWorkspaceController
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
@@ -17,7 +18,8 @@ import {
   zodAddChannelToWorkspaceSchema,
   zodAddMemberToByEmailWorkspaceSchema,
   zodAddMemberToWorkspaceSchema,
-  zodCreateWorkspaceScema
+  zodCreateWorkspaceScema,
+  zodRemoveMemberByEmailFromWorkspaceSchema
 } from '../../validators/workspaceSchema.js';
 import { validate } from '../../validators/zodValidator.js';
 
@@ -65,6 +67,13 @@ router.put(
   isAuthenticated,
   validate(zodAddMemberToByEmailWorkspaceSchema),
   addMemberToWorksapceByEmailController
+);
+
+router.delete(
+  '/:workspaceId/members/email',
+  isAuthenticated,
+  validate(zodRemoveMemberByEmailFromWorkspaceSchema),
+  removeMemberFromWorkspaceByEmailController
 );
 
 export default router;
