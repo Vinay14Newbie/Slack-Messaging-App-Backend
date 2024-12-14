@@ -1,0 +1,17 @@
+Indexes support the efficient execution of queries in MongoDB. Without indexes, MongoDB must perform a collection scan, i.e. scan every document in a collection, to select those documents that match the query statement. If an appropriate index exists for a query, MongoDB can use the index to limit the number of documents it must inspect.
+Although indexes improve query performance, adding an index has negative performance impact for write operations. For collections with a high write-to-read ratio, indexes are expensive because each insert must also update any indexes.
+
+Use Cases
+If your application is repeatedly running queries on the same fields, you can create an index on those fields to improve performance. 
+
+
+--***--The _id property in Mongoose is automatically indexed for a few important reasons:
+-MongoDB automatically creates a unique index on the _id field during the creation of a collection. Mongoose, being an ODM for MongoDB, follows this convention.
+-Indexing a field significantly speeds up queries that filter or sort based on that field. Since _id is frequently used for lookups, indexing it by default ensures fast access to documents.
+-Mongoose assigns an _id field to each document in a schema by default, unless you explicitly disable it. This aligns with MongoDB's default behavior and ensures that every document has a unique identifier.
+
+
+
+--**-- unique:true property in a schema 
+Mongoose will automatically build a unique index for the field when you first create the schema with unique: true (i.e Username). The unique index would still be present in the database even if you changed it from within your code to unique: false because mongoose had already created it.
+In Mongoose, the unique: true property in a schema definition doesn't directly perform validation itself. Instead, it signals Mongoose to create a unique index in the underlying MongoDB database for that field.

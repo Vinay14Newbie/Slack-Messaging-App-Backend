@@ -1,0 +1,1 @@
+It is built on top of Apache Lucene and is supported by Elastic. Elasticsearch is used for storing, searching, and analyzing structured and unstructured data in near real-time. One of the key features of Elasticsearch is its scalability, which allows it to handle large datasets across multiple nodes in a cluster.
