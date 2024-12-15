@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { checkIfUserMemberOfWorkspaceController } from '../../controllers/memberController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 

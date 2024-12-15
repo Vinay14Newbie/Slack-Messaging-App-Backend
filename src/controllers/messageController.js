@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+
 import { getPaginatedMessageService } from '../services/messageService.js';
 import {
   customErrorResponse,
@@ -16,7 +17,7 @@ export const getPaginatedMessageController = async (req, res) => {
     );
     return res
       .status(StatusCodes.OK)
-      .json(successResponse(response, 'Messages fetched successfully :)'));
+      .json(successResponse(messages, 'Messages fetched successfully :)'));
   } catch (error) {
     console.log('Error while fetching the messages: ', error);
     if (error.statusCode) {
