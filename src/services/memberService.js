@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import workspaceRepository from '../repositories/workspaceRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 
-const isUserPartOfWorkspace = function (workspace, userId) {
+export const isUserPartOfWorkspace = function (workspace, userId) {
   const response = workspace.members.find(
     (member) =>
       member.memberId.toString() === userId ||

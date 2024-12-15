@@ -4,6 +4,10 @@ import { getPaginatedMessageController } from '../../controllers/messageControll
 
 const router = express.Router();
 
-router.get('/:channelId', isAuthenticated, getPaginatedMessageController);
+router.get(
+  '/messages/:channelId',
+  isAuthenticated,
+  getPaginatedMessageController
+);
 
 export default router;
