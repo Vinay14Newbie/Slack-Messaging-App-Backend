@@ -5,7 +5,8 @@ import { Server } from 'socket.io';
 import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
-import messageHandler from './controllers/messageSocketController.js';
+import ChannelSocketHandlers from './controllers/ChannelSocketController.js';
+import MessageSocketHandlers from './controllers/messageSocketController.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 import apiRouter from './routers/apiRouter.js';
 
@@ -43,7 +44,8 @@ io.on('connection', (socket) => {
   //   socket.emit('message', `This is a message from the server:`);
   // }, 3000);
 
-  messageHandler(io, socket);
+  MessageSocketHandlers(io, socket);
+  ChannelSocketHandlers(io, socket);
 });
 
 server.listen(PORT, () => {
