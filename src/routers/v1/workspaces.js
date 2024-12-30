@@ -10,6 +10,7 @@ import {
   findAllWorkspacesController,
   getWorkspaceByIdController,
   getWorkspaceByJoinCodeController,
+  joinWorkspaceByJoinCodeController,
   removeMemberFromWorkspaceByEmailController,
   resetJoinCodeOfWorkspaceController,
   updateWorkspaceController
@@ -81,6 +82,12 @@ router.delete(
   isAuthenticated,
   validate(zodRemoveMemberByEmailFromWorkspaceSchema),
   removeMemberFromWorkspaceByEmailController
+);
+
+router.put(
+  '/:workspaceId/join',
+  isAuthenticated,
+  joinWorkspaceByJoinCodeController
 );
 
 export default router;

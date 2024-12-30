@@ -158,7 +158,9 @@ const isUserAdminOfWorkspace = (workspace, userId) => {
 
 const isUserMemberOfWorkspace = (workspace, userId) => {
   const response = workspace.members.find(
-    (member) => member.memberId.toString() === userId
+    (member) =>
+      member.memberId.toString() === userId ||
+      member.memberId._id.toString() === userId
   );
   return response;
 };
@@ -546,6 +548,53 @@ export const addChannelToWorkspaceService = async (
       'Error while adding channel to the workspace in service layer: ',
       error
     );
+    throw error;
+  }
+};
+
+export const joinWorkspaceByJoinCodeService = async (
+  workspaceId,
+  joinCode,
+  userId
+) => {
+  try {
+    const workspace = await workspaceRepository.workspaceDetails(workspaceId);
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data',
+        message: 'Invalid workspaced ID sent by user',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    console.log('Workspace org join code: ', workspace.joinCode);
+    console.log('Join', joinCode);
+
+    const isMember = isUserMemberOfWorkspace(workspace, userId);
+    if (isMember) {
+      throw new ClientError({
+        explanation: 'invalid data',
+        message: 'user is already part of workspace',
+        statusCode: StatusCodes.FORBIDDEN
+      });
+    }
+
+    if (workspace.joinCode !== joinCode) {
+      throw new ClientError({
+        explanation: 'Invalid data',
+        message: 'Invalid joinCode provided',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    const updatedWorkspace = await workspaceRepository.addMemberToWorkspace(
+      workspaceId,
+      userId,
+      'member'
+    );
+    return updatedWorkspace;
+  } catch (error) {
+    console.log('Error in service layer, joinWorkspaceByJoinCode: ', error);
     throw error;
   }
 };
