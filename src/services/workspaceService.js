@@ -278,6 +278,21 @@ export const updateWorkspaceService = async (
   }
 };
 
+export const resetJoinCodeOfWorkspaceService = async (workspaceId, userId) => {
+  try {
+    const newJoinCode = uuidv4().substring(0, 6).toUpperCase();
+    const response = await updateWorkspaceService(
+      workspaceId,
+      { joinCode: newJoinCode },
+      userId
+    );
+    return response;
+  } catch (error) {
+    console.log('Error in udpate joinCode service layer', error);
+    throw error;
+  }
+};
+
 export const addMemberToWorkspaceService = async (
   workspaceId,
   memberId,

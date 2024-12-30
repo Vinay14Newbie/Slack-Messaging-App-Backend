@@ -11,6 +11,7 @@ import {
   getWorkspaceByJoinCodeService,
   getWorkspaceService,
   removeMemberFromWorkspaceByEmailService,
+  resetJoinCodeOfWorkspaceService,
   updateWorkspaceService
 } from '../services/workspaceService.js';
 import {
@@ -246,6 +247,31 @@ export async function removeMemberFromWorkspaceByEmailController(req, res) {
       .json(successResponse(response, 'Member removed successfully :)'));
   } catch (error) {
     console.log('Controller layer error: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function resetJoinCodeOfWorkspaceController(req, res) {
+  try {
+    const workspaceId = req.params.workspaceId;
+    const userId = req.user;
+    const response = await resetJoinCodeOfWorkspaceService(workspaceId, userId);
+
+    return res
+      .status(StatusCodes.OK)
+      .json(
+        successResponse(
+          response,
+          'Join code of workspace successfully reseted :)'
+        )
+      );
+  } catch (error) {
+    console.log('Controller layer error in reset Join code: ', error);
     if (error.statusCode) {
       return res.status(error.statusCode).json(customErrorResponse(error));
     }

@@ -11,6 +11,7 @@ import {
   getWorkspaceByIdController,
   getWorkspaceByJoinCodeController,
   removeMemberFromWorkspaceByEmailController,
+  resetJoinCodeOfWorkspaceController,
   updateWorkspaceController
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
@@ -67,6 +68,12 @@ router.put(
   isAuthenticated,
   validate(zodAddMemberToByEmailWorkspaceSchema),
   addMemberToWorksapceByEmailController
+);
+
+router.put(
+  '/:workspaceId/joinCode/reset',
+  isAuthenticated,
+  resetJoinCodeOfWorkspaceController
 );
 
 router.delete(
