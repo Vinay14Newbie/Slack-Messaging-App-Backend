@@ -86,7 +86,7 @@ export const deleteWorkspaceByIdService = async (workspaceId, userId) => {
     if (!workspace) {
       throw new ClientError({
         explanation: 'invalid data',
-        message: 'workspace not found with this id',
+        message: 'Workspace not found with this id',
         statusCode: StatusCodes.NOT_FOUND
       });
     }
@@ -179,7 +179,7 @@ export const getWorkspaceService = async (workspaceId, userId) => {
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data sent by user',
-        message: "workspace doesn't exist",
+        message: "Workspace doesn't exist",
         statusCode: StatusCodes.NOT_FOUND
       });
     }
@@ -191,7 +191,7 @@ export const getWorkspaceService = async (workspaceId, userId) => {
     if (!isMember) {
       throw new ClientError({
         explanation: 'Invalid data sent by user',
-        message: 'user not present in given workspace',
+        message: 'User not present in given workspace',
         statusCode: StatusCodes.UNAUTHORIZED
       });
     }
@@ -210,7 +210,7 @@ export const getWorkspaceByJoinCodeService = async (joinCode, userId) => {
     if (!workspace) {
       throw new ClientError({
         explanation: 'invalid data sent by user',
-        message: 'join code is invalid',
+        message: 'Join code is invalid',
         statusCode: StatusCodes.NOT_FOUND
       });
     }
@@ -221,8 +221,8 @@ export const getWorkspaceByJoinCodeService = async (joinCode, userId) => {
     const isMember = isUserMemberOfWorkspace(workspace, userId);
     if (!isMember) {
       throw new ClientError({
-        explanation: 'invalid data sent by user',
-        message: 'user is not part of the workspace',
+        explanation: 'Invalid data sent by user',
+        message: 'User is not part of the workspace',
         statusCode: StatusCodes.UNAUTHORIZED
       });
     }
@@ -244,7 +244,7 @@ export const updateWorkspaceService = async (
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data',
-        message: 'invalid workspace id provided',
+        message: 'Invalid workspace id provided',
         statusCode: StatusCodes.NOT_FOUND
       });
     }
@@ -264,7 +264,7 @@ export const updateWorkspaceService = async (
     if (!isAdmin) {
       throw new ClientError({
         explanation: 'invalid data',
-        message: 'user is not admin',
+        message: 'User is not admin',
         statusCode: StatusCodes.UNAUTHORIZED
       });
     }
@@ -342,7 +342,7 @@ export const addMemberToWorkspaceService = async (
     if (isMember) {
       throw new ClientError({
         explanation: 'invalid data',
-        message: 'user is already part of workspace',
+        message: 'User is already part of workspace',
         statusCode: StatusCodes.FORBIDDEN
       });
     }
@@ -410,7 +410,7 @@ export const addMemberToWorksapceByEmailService = async (
     if (isMember) {
       throw new ClientError({
         explanation: 'invalid data',
-        message: 'user is already part of workspace',
+        message: 'User is already part of workspace',
         statusCode: StatusCodes.FORBIDDEN
       });
     }
@@ -574,7 +574,7 @@ export const joinWorkspaceByJoinCodeService = async (
     if (isMember) {
       throw new ClientError({
         explanation: 'invalid data',
-        message: 'user is already part of workspace',
+        message: 'User is already part of workspace',
         statusCode: StatusCodes.FORBIDDEN
       });
     }

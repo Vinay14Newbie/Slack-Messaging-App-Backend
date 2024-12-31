@@ -10,6 +10,7 @@ import ChannelSocketHandlers from './controllers/ChannelSocketController.js';
 import MessageSocketHandlers from './controllers/messageSocketController.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 import apiRouter from './routers/apiRouter.js';
+import { verifyEmailController } from './controllers/userController.js';
 
 const app = express();
 const server = createServer(app); //it will create a server, cause now we're serving the websocket request on same port
@@ -28,6 +29,8 @@ app.get('/ping', isAuthenticated, (req, res) => {
 });
 
 app.use('/api', apiRouter);
+
+app.get('/verify/:token', verifyEmailController);
 
 // 'io.on' listens for the connection event, which triggers every time a client establishes a WebSocket connection to the server.
 io.on('connection', (socket) => {

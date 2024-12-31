@@ -5,10 +5,22 @@ import userRepository from '../repositories/userRepository.js';
 import { createJwt } from '../utils/common/authUtils.js';
 import ClientError from '../utils/errors/clientError.js';
 import validationError from '../utils/errors/validationError.js';
+import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig.js';
+import { addEmailtoMailQueue } from '../producers/mailQueueProducer.js';
+import { verifyEmailMail } from '../utils/common/mailObject.js';
 
 export const signupService = async (data) => {
   try {
-    const newUser = await userRepository.create(data);
+    const newUser = await userRepository.signUpUser(data);
+    console.log('Verification token', newUser.verificationToken);
+
+    if (ENABLE_EMAIL_VERIFICATION === 'true') {
+      addEmailtoMailQueue({
+        ...verifyEmailMail(newUser.verificationToken),
+        to: newUser.email
+      });
+    }
+
     return newUser;
   } catch (error) {
     console.log('User service error: ', error);
@@ -31,6 +43,44 @@ export const signupService = async (data) => {
         'A user with same email or username already exists'
       );
     }
+  }
+};
+
+export const verifyTokenService = async (token) => {
+  try {
+    console.log('token: ', token);
+
+    const user = await userRepository.getByToken(token);
+    if (!user) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Invalid token',
+        statusCode: StatusCodes.BAD_REQUEST
+      });
+    }
+
+    //check if the token has expired or not
+    if (user.verificationTokenExpiry < Date.now()) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Token has expired',
+        statusCode: StatusCodes.BAD_REQUEST
+      });
+    }
+
+    console.log('user: ', user);
+
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpiry = null;
+    await user.save();
+
+    console.log('After signed out, user: ', user);
+
+    return user;
+  } catch (error) {
+    console.log('User service error: ', error);
+    throw error;
   }
 };
 

@@ -3,7 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 import {
   findAllUsersService,
   signinUserService,
-  signupService
+  signupService,
+  verifyTokenService
 } from '../services/userService.js';
 import {
   customErrorResponse,
@@ -54,6 +55,23 @@ export async function signin(req, res) {
       return res.status(error.statusCode).json(customErrorResponse(error));
     }
 
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function verifyEmailController(req, res) {
+  try {
+    const response = await verifyTokenService(req.params.token);
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Email verified successfully'));
+  } catch (error) {
+    console.log('verify email controller error', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json(internalErrorResponse(error));
