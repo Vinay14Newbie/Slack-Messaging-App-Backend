@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
-import userRepository from '../repositories/userRepository.js';
-import { createJwt } from '../utils/common/authUtils.js';
-import ClientError from '../utils/errors/clientError.js';
-import validationError from '../utils/errors/validationError.js';
 import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig.js';
 import { addEmailtoMailQueue } from '../producers/mailQueueProducer.js';
+import userRepository from '../repositories/userRepository.js';
+import { createJwt } from '../utils/common/authUtils.js';
 import { verifyEmailMail } from '../utils/common/mailObject.js';
+import ClientError from '../utils/errors/clientError.js';
+import validationError from '../utils/errors/validationError.js';
 
 export const signupService = async (data) => {
   try {
