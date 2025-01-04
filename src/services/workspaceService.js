@@ -138,7 +138,7 @@ const isUserPartOfWorkspace = (workspace, userId) => {
   return response;
 };
 
-const isUserAdminOfWorkspace = (workspace, userId) => {
+export const isUserAdminOfWorkspace = (workspace, userId) => {
   console.log('Workspace members: ', workspace.members, ' userId: ', userId);
 
   // const response = workspace.members.find(
@@ -154,6 +154,12 @@ const isUserAdminOfWorkspace = (workspace, userId) => {
       member.role === 'admin'
   );
   return response;
+};
+
+export const isChannelPartOfWorkspace = (workspace, channelId) => {
+  return workspace.channels.find(
+    (channel) => channel._id.toString() === channelId
+  );
 };
 
 const isUserMemberOfWorkspace = (workspace, userId) => {
@@ -595,6 +601,80 @@ export const joinWorkspaceByJoinCodeService = async (
     return updatedWorkspace;
   } catch (error) {
     console.log('Error in service layer, joinWorkspaceByJoinCode: ', error);
+    throw error;
+  }
+};
+
+export const updateChannelByIdService = async (
+  channelId,
+  workspaceId,
+  userId,
+  channelData
+) => {
+  try {
+    // 1- check if workspace exist
+    const workspace = await workspaceRepository.getById(workspaceId);
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data',
+        message: 'Invalid workspace id provided',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 2- check if channelId is valid or not
+    const channel = await channelRepository.getById(channelId);
+    if (!channel) {
+      throw new ClientError({
+        explanation: 'Invalid data',
+        message: 'Invalid channel id provided',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 3- check if channel is part of workspace or not
+    const checkChannelPartOfWorkspace = isChannelPartOfWorkspace(
+      workspace,
+      channelId
+    );
+    if (!checkChannelPartOfWorkspace) {
+      throw new ClientError({
+        explanation: 'invalid data sent by the user',
+        message: 'Channel is not part of workspace',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 4- check if user exist or not
+    const validUser = await userRepository.getById(userId);
+    if (!validUser) {
+      throw new ClientError({
+        explanation: 'invalid data sent by the user',
+        message: 'User not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    // 5- check if user is admin or not
+    const isAdmin = isUserAdminOfWorkspace(workspace, userId);
+    if (!isAdmin) {
+      throw new ClientError({
+        explanation: 'invalid data',
+        message: 'User is not admin',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    console.log('Channelid and data: ', channelId, channelData);
+
+    const updatedChannel = await channelRepository.update(
+      channelId,
+      channelData
+    );
+
+    return updatedChannel;
+  } catch (error) {
+    console.log('Service error, while updating the channel: ', error);
     throw error;
   }
 };

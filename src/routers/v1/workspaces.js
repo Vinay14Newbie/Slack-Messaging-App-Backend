@@ -13,6 +13,7 @@ import {
   joinWorkspaceByJoinCodeController,
   removeMemberFromWorkspaceByEmailController,
   resetJoinCodeOfWorkspaceController,
+  updateChannelByIdController,
   updateWorkspaceController
 } from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
@@ -88,6 +89,12 @@ router.put(
   '/:workspaceId/join',
   isAuthenticated,
   joinWorkspaceByJoinCodeController
+);
+
+router.put(
+  '/:workspaceId/:channelId',
+  isAuthenticated,
+  updateChannelByIdController
 );
 
 export default router;

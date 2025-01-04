@@ -13,6 +13,7 @@ import {
   joinWorkspaceByJoinCodeService,
   removeMemberFromWorkspaceByEmailService,
   resetJoinCodeOfWorkspaceService,
+  updateChannelByIdService,
   updateWorkspaceService
 } from '../services/workspaceService.js';
 import {
@@ -294,6 +295,28 @@ export async function joinWorkspaceByJoinCodeController(req, res) {
       .json(successResponse(response, 'Joined workspace successfully'));
   } catch (error) {
     console.log('Controller layer error in join by code: ', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}
+
+export async function updateChannelByIdController(req, res) {
+  try {
+    const response = await updateChannelByIdService(
+      req.params.channelId,
+      req.params.workspaceId,
+      req.user,
+      req.body
+    );
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Channel data updated successfully'));
+  } catch (error) {
+    console.log('Controller layer error, updating channel: ', error);
     if (error.statusCode) {
       return res.status(error.statusCode).json(customErrorResponse(error));
     }
