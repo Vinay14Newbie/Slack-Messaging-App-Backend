@@ -28,7 +28,13 @@ export const isAuthenticated = async function (req, res, next) {
         })
       );
     }
-    console.log('user return via token: ', response);
+    // console.log('user return via token: ', response);
+    // user return via token:  {
+    //   id: '674e97862b3d5d9d79679a45',
+    //   email: 'aman@gmail.com',
+    //   iat: 1736074072,
+    //   exp: 1736092072
+    // }
 
     const user = await userRepository.getById(response.id);
     req.user = user.id;
