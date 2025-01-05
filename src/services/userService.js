@@ -68,14 +68,10 @@ export const verifyTokenService = async (token) => {
       });
     }
 
-    console.log('user: ', user);
-
     user.isVerified = true;
     user.verificationToken = null;
     user.verificationTokenExpiry = null;
     await user.save();
-
-    console.log('After signed out, user: ', user);
 
     return user;
   } catch (error) {

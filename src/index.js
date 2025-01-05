@@ -14,7 +14,11 @@ import apiRouter from './routers/apiRouter.js';
 
 const app = express();
 const server = createServer(app); //it will create a server, cause now we're serving the websocket request on same port
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: '*'
+  }
+});
 
 app.use(cors());
 

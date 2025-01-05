@@ -17,7 +17,6 @@ export const getChannelByIdService = async (channelId, userId) => {
   try {
     const channel =
       await channelRepository.getChannelWithWorkspaceDetails(channelId);
-    console.log('Channel details: ', channel);
 
     if (!channel || !channel.workspaceId) {
       throw new ClientError({
@@ -41,8 +40,6 @@ export const getChannelByIdService = async (channelId, userId) => {
       1,
       20
     );
-
-    console.log('channel in channel service: ', channel);
 
     // return { ...channel, messages };  //it will also distructure the internal properties altogether
 

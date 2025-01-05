@@ -83,8 +83,6 @@ const workspaceRepository = {
       workspaceId: workspaceId
     });
 
-    console.log('Channel in repo layer: ', channel);
-
     workspace.channels.push(channel);
     await workspace.save();
 

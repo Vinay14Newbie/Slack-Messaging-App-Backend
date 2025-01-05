@@ -59,8 +59,6 @@ export async function findAllWorkspacesController(req, res) {
 
 export async function deleteWorkspaceByIdController(req, res) {
   try {
-    console.log('id from user: ', req.params.workspaceId);
-
     const response = await deleteWorkspaceByIdService(
       req.params.workspaceId,
       req.user

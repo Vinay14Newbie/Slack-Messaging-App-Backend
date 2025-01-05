@@ -20,9 +20,6 @@ export const createWorkspaceService = async (worksapceData) => {
       joinCode
     });
 
-    console.log('new Workspace: ', newWorkspace);
-    console.log(`new workspaces's id: ${newWorkspace._id.toString()}`);
-
     // the person who created the workspace is admin
     await workspaceRepository.addMemberToWorkspace(
       newWorkspace._id.toString(),
@@ -81,7 +78,6 @@ export const deleteWorkspaceByIdService = async (workspaceId, userId) => {
   try {
     // 1- check if the workspace exist
     const workspace = await workspaceRepository.getById(workspaceId);
-    console.log('workspace: ', workspace);
 
     if (!workspace) {
       throw new ClientError({
@@ -92,7 +88,6 @@ export const deleteWorkspaceByIdService = async (workspaceId, userId) => {
     }
 
     // 2- if the user is admin then delete the workspace
-    console.log('workspace members: ', workspace.members, ' userid ', userId);
     const isAllowed = isUserAdminOfWorkspace(workspace, userId);
 
     if (isAllowed) {
@@ -139,8 +134,6 @@ const isUserPartOfWorkspace = (workspace, userId) => {
 };
 
 export const isUserAdminOfWorkspace = (workspace, userId) => {
-  console.log('Workspace members: ', workspace.members, ' userId: ', userId);
-
   // const response = workspace.members.find(
   //   (member) =>
   //     member.memberId._id.toString() === userId && member.role === 'admin'
@@ -192,7 +185,6 @@ export const getWorkspaceService = async (workspaceId, userId) => {
 
     // 2- check if user part of this workspace
     const isMember = isUserPartOfWorkspace(workspace, userId);
-    console.log('isMember: ', isMember);
 
     if (!isMember) {
       throw new ClientError({
@@ -296,7 +288,7 @@ export const resetJoinCodeOfWorkspaceService = async (workspaceId, userId) => {
     );
     return response;
   } catch (error) {
-    console.log('Error in udpate joinCode service layer', error);
+    'Error in udpate joinCode service layer', error;
     throw error;
   }
 };
@@ -310,10 +302,6 @@ export const addMemberToWorkspaceService = async (
   try {
     // 1- check workspace
     const workspace = await workspaceRepository.getById(workspaceId);
-    console.log(
-      'Workspace id in addMemberToWorksapceService: ',
-      workspace.members[0].memberId
-    );
 
     if (!workspace) {
       throw new ClientError({
@@ -508,10 +496,6 @@ export const addChannelToWorkspaceService = async (
     // here we're populating the details so workspace.members.memberId will have the full details
     // for getting id we need to do workspace.members.memberId._id
     const workspace = await workspaceRepository.workspaceDetails(workspaceId);
-    console.log(
-      'Workspace id in addChannelToWorksapceService: ',
-      workspace.members[0].memberId._id
-    );
 
     if (!workspace) {
       throw new ClientError({
@@ -573,9 +557,6 @@ export const joinWorkspaceByJoinCodeService = async (
       });
     }
 
-    console.log('Workspace org join code: ', workspace.joinCode);
-    console.log('Join', joinCode);
-
     const isMember = isUserMemberOfWorkspace(workspace, userId);
     if (isMember) {
       throw new ClientError({
@@ -609,7 +590,7 @@ export const updateChannelByIdService = async (
   channelId,
   workspaceId,
   userId,
-  channelData
+  name
 ) => {
   try {
     // 1- check if workspace exist
@@ -665,12 +646,7 @@ export const updateChannelByIdService = async (
       });
     }
 
-    console.log('Channelid and data: ', channelId, channelData);
-
-    const updatedChannel = await channelRepository.update(
-      channelId,
-      channelData
-    );
+    const updatedChannel = await channelRepository.update(channelId, name);
 
     return updatedChannel;
   } catch (error) {
