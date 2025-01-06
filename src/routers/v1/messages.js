@@ -5,10 +5,6 @@ import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get(
-  '/messages/:channelId',
-  isAuthenticated,
-  getPaginatedMessageController
-);
+router.get('/:channelId', isAuthenticated, getPaginatedMessageController);
 
 export default router;
