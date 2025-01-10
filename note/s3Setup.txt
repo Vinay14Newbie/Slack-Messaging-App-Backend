@@ -1,0 +1,6 @@
+1- Setup s3 configuration object OR credentials : region, accessKeyId, secretAcessKey
+Set all this info in awsConfig.js file
+
+
+2- Setup presigned url to generated pre-signed url
+By setting this layer on Controller layer...get presigned url
