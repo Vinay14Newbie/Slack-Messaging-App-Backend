@@ -14,7 +14,7 @@ import {
 export async function createOrderController(req, res) {
   try {
     const options = {
-      amount: req.body.amount,
+      amount: req.body.amount * 100,
       currency: CURRENCY,
       receipt: RECEIPT_SECRET
     };
