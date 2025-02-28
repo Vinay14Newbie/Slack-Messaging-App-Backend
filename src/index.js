@@ -6,7 +6,9 @@ import { Server } from 'socket.io';
 import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
+import DMHandler from './controllers/1v1MessageSocketController.js';
 import ChannelSocketHandlers from './controllers/ChannelSocketController.js';
+import DMmessageHandler from './controllers/DMSocketController.js';
 import MessageSocketHandlers from './controllers/messageSocketController.js';
 import { verifyEmailController } from './controllers/userController.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
@@ -40,22 +42,11 @@ app.get('/verify/:token', verifyEmailController);
 io.on('connection', (socket) => {
   console.log('a user connected ', socket.id);
 
-  //message from client
-  // Listens for a custom event named 'messageFromClient' from the connected client.
-  // socket.on('messageFromClient', (data) => {
-  //   console.log('Message from client: ', data);
-
-  //   // The io.emit method sends an event called 'new message' to every connected client.
-  //   io.emit('new message', data.toUpperCase()); //broadcast the message with event name 'new message'
-  // });
-
-  // 'socket.emit' targets the client associated with the current socket object (instead of all clients, as with io.emit).
-  // setTimeout(() => {
-  //   socket.emit('message', `This is a message from the server:`);
-  // }, 3000);
-
   MessageSocketHandlers(io, socket);
   ChannelSocketHandlers(io, socket);
+
+  DMHandler(io, socket);
+  DMmessageHandler(io, socket);
 });
 
 server.listen(PORT, () => {

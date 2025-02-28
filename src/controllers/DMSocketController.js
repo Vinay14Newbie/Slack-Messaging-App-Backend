@@ -1,4 +1,4 @@
-import { createMessageService } from '../services/messageService.js';
+import { createDMMessageService } from '../services/DMService.js';
 import {
   NEW_DM_EVENT,
   NEW_DM_RECEIVED_EVENT
@@ -7,9 +7,10 @@ import {
 export default function DMmessageHandler(io, socket) {
   socket.on(NEW_DM_EVENT, async function createDMMessageHandler(data, cb) {
     console.log('Controller layer: ', data, typeof data);
-    const { memberId } = data;
-    // const messageResponse = await ;
-    io.to(memberId).emit(NEW_DM_RECEIVED_EVENT, messageResponse);
+    const { senderId, receiverId } = data;
+    const roomId = [senderId, receiverId].sort().join('_'); //creating roomId using sender and receiver ID
+    const messageResponse = await createDMMessageService(data);
+    io.to(roomId).emit(NEW_DM_RECEIVED_EVENT, messageResponse);
 
     cb?.({
       success: true,
