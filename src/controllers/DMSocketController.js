@@ -9,6 +9,7 @@ export default function DMmessageHandler(io, socket) {
     console.log('Controller layer: ', data, typeof data);
     const { senderId, receiverId } = data;
     const roomId = [senderId, receiverId].sort().join('_'); //creating roomId using sender and receiver ID
+    data.dmId = roomId;
     const messageResponse = await createDMMessageService(data);
     io.to(roomId).emit(NEW_DM_RECEIVED_EVENT, messageResponse);
 

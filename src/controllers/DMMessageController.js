@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { getPaginatedDMsService } from '../services/DMService';
+import { getPaginatedDMsService } from '../services/DMService.js';
 import {
   customErrorResponse,
   internalErrorResponse,
   successResponse
-} from '../utils/common/responseObject';
+} from '../utils/common/responseObject.js';
 
 export const getPaginatedDMMEssagesController = async (req, res) => {
   try {

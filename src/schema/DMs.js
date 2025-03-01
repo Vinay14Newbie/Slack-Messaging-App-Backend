@@ -18,6 +18,10 @@ const DMSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Sender Id is required']
+    },
+    dmId: {
+      type: String,
+      required: [true, 'DM id is required']
     }
   },
   { timestamps: true }
