@@ -9,8 +9,11 @@ import {
 
 export const getPaginatedDMMEssagesController = async (req, res) => {
   try {
-    const { senderId, receiverId } = req.body;
+    const senderId = req.user;
+    const receiverId = req.params.memberId;
     const DMId = [senderId, receiverId].sort().join('_');
+    console.log('dmid ', typeof DMId);
+
     const messages = await getPaginatedDMsService(
       DMId,
       req.query.page || 1,

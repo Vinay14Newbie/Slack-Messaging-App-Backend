@@ -5,7 +5,9 @@ const DMRespository = {
   ...crudRepository(DM),
 
   getPaginatedDMs: async function (DMId, page, limit) {
-    const messages = await DM.find(DMId)
+    console.log('dmid ', DMId, ' type of it ', typeof DMId);
+
+    const messages = await DM.find({ dmId: DMId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)

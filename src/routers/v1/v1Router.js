@@ -1,12 +1,12 @@
 import express from 'express';
 
 import useChannel from './channels.js';
+import dmsRouter from './dm.js';
 import memberRouter from './members.js';
 import messageRouter from './messages.js';
 import paymentRouter from './payment.js';
 import userRouter from './users.js';
 import workspaceRouter from './workspaces.js';
-import dmsRouter from './dm.js';
 
 const router = express.Router();
 
